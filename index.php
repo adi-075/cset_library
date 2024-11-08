@@ -21,7 +21,7 @@
         <p><a href="">Checkout</a> a book.</p>
         <p><a href="">Return</a> a book.</p>
         <p>Report a book <a href="">history</a>.</p>
-        <p>Application <a href="">logout</a>.</p>
+        <p>Application <a href="login.php">logout</a>.</p>
     </div>
 </body>
 
