@@ -76,6 +76,3 @@ $mysqli->close();
 </body>
 
 </html>
-
-<!-- admin
-sudouser -->
