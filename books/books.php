@@ -65,7 +65,36 @@
 <body>
     <div class="container">
         <h1>Book Maintenance</h1>
-        <p>3 books found.</p>
+
+        <?php
+        // Load database configuration from myproperties.ini
+        $config = parse_ini_file("../myproperties.ini", true);
+        $dbConfig = $config['DB'];
+
+        // Check if configuration was successfully loaded
+        if (!$dbConfig || !isset($dbConfig['DBHOST'], $dbConfig['DBUSER'], $dbConfig['DBPASS'], $dbConfig['DBNAME'])) {
+            die("Error: Unable to load database configuration from myproperties.ini");
+        }
+
+        // Establish database connection using MySQLi
+        $mysqli = new mysqli($dbConfig['DBHOST'], $dbConfig['DBUSER'], $dbConfig['DBPASS'], $dbConfig['DBNAME']);
+
+        // Check for connection errors
+        if ($mysqli->connect_error) {
+            die("Connection failed: " . $mysqli->connect_error);
+        }
+
+        // Query to fetch book data
+        $sql = "SELECT bookid, title, author, publisher, active, create_dt, last_updated FROM book";
+        $result = $mysqli->query($sql);
+
+        // Display count of books found
+        if ($result && $result->num_rows > 0) {
+            echo "<p>" . $result->num_rows . " books found.</p>";
+        } else {
+            echo "<p>No books found.</p>";
+        }
+        ?>
 
         <div class="filter-section">
             <label for="filter">Filter:</label>
@@ -95,36 +124,24 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>PHP and MySQL Web Development</td>
-                    <td>Welling and Thompson</td>
-                    <td>Addison Wesley</td>
-                    <td>1</td>
-                    <td>2024-11-03 22:37:53</td>
-                    <td>2024-11-03 22:37:53</td>
-                    <td><a href="#" class="status-link">Active Status</a></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Programming Rust</td>
-                    <td>Blandy, et. al.</td>
-                    <td>O'Reilly</td>
-                    <td>1</td>
-                    <td>2024-11-03 22:37:53</td>
-                    <td>2024-11-03 22:37:53</td>
-                    <td><a href="#" class="status-link">Active Status</a></td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Database System Concepts</td>
-                    <td>Silberschatz, et. al.</td>
-                    <td>McGraw Hill</td>
-                    <td>1</td>
-                    <td>2024-11-03 22:37:53</td>
-                    <td>2024-11-03 22:37:53</td>
-                    <td><a href="#" class="status-link">Active Status</a></td>
-                </tr>
+                <?php
+                // Fetch and display data from the query
+                if ($result && $result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row['bookid'] . "</td>";
+                        echo "<td>" . $row['title'] . "</td>";
+                        echo "<td>" . $row['author'] . "</td>";
+                        echo "<td>" . $row['publisher'] . "</td>";
+                        echo "<td>" . ($row['active'] == 1 ? 'Active' : 'Inactive') . "</td>";
+                        echo "<td>" . $row['create_dt'] . "</td>";
+                        echo "<td>" . $row['last_updated'] . "</td>";
+                        echo "<td><a href='#' class='status-link'>Active Status</a></td>";
+                        echo "</tr>";
+                    }
+                }
+                $mysqli->close();
+                ?>
             </tbody>
         </table>
 
