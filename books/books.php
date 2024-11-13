@@ -76,6 +76,10 @@
             die("Error: Unable to load database configuration from myproperties.ini");
         }
 
+        // Initialize filter variables
+        $filterValue = isset($_GET['filter']) ? $_GET['filter'] : '';
+        $filterColumn = isset($_GET['column']) ? $_GET['column'] : '';
+
         // Establish database connection using MySQLi
         $mysqli = new mysqli($dbConfig['DBHOST'], $dbConfig['DBUSER'], $dbConfig['DBPASS'], $dbConfig['DBNAME']);
 
@@ -86,6 +90,10 @@
 
         // Query to fetch book data
         $sql = "SELECT bookid, title, author, publisher, active, create_dt, last_updated FROM book";
+        if (!empty($filterValue) && !empty($filterColumn)) {
+            $sql .= " WHERE $filterColumn LIKE '%" . $mysqli->real_escape_string($filterValue) . "%'";
+        }
+
         $result = $mysqli->query($sql);
 
         // Display count of books found
@@ -96,18 +104,26 @@
         }
         ?>
 
+        <!-- Filter Form -->
         <div class="filter-section">
-            <label for="filter">Filter:</label>
-            <input type="text" id="filter" name="filter">
-            <label for="column">Column:</label>
-            <select id="column" name="column">
-                <option value="">--Select Column--</option>
-                <option value="title">Title</option>
-                <option value="author">Author</option>
-                <option value="publisher">Publisher</option>
-                <option value="active">Active</option>
-            </select>
-            <button type="button">Filter</button>
+            <form method="GET" action="">
+                <label for="filter">Filter:</label>
+                <input type="text" id="filter" name="filter" value="<?php echo htmlspecialchars($filterValue); ?>">
+                <label for="column">Column:</label>
+                <select id="column" name="column">
+                    <option value="">--Select Column--</option>
+                    <option value="title" <?php if ($filterColumn == 'title')
+                        echo 'selected'; ?>>Title</option>
+                    <option value="author" <?php if ($filterColumn == 'author')
+                        echo 'selected'; ?>>Author</option>
+                    <option value="publisher" <?php if ($filterColumn == 'publisher')
+                        echo 'selected'; ?>>Publisher
+                    </option>
+                    <option value="active" <?php if ($filterColumn == 'active')
+                        echo 'selected'; ?>>Active</option>
+                </select>
+                <button type="submit">Filter</button>
+            </form>
         </div>
 
         <table>
