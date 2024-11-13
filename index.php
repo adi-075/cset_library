@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("Location: login.php");
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +28,7 @@
         <p><a href="">Checkout</a> a book.</p>
         <p><a href="">Return</a> a book.</p>
         <p>Report a book <a href="">history</a>.</p>
-        <p>Application <a href="login.php">logout</a>.</p>
+        <p>Application <a href="logout.php">logout</a>.</p>
     </div>
 </body>
 

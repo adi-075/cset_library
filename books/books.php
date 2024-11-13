@@ -65,69 +65,103 @@
 <body>
     <div class="container">
         <h1>Book Maintenance</h1>
-        <p>3 books found.</p>
 
+        <?php
+        // Load database configuration from myproperties.ini
+        $config = parse_ini_file("../myproperties.ini", true);
+        $dbConfig = $config['DB'];
+
+        // Check if configuration was successfully loaded
+        if (!$dbConfig || !isset($dbConfig['DBHOST'], $dbConfig['DBUSER'], $dbConfig['DBPASS'], $dbConfig['DBNAME'])) {
+            die("Error: Unable to load database configuration from myproperties.ini");
+        }
+
+        // Initialize filter variables
+        $filterValue = isset($_GET['filter']) ? $_GET['filter'] : '';
+        $filterColumn = isset($_GET['column']) ? $_GET['column'] : '';
+
+        // Establish database connection using MySQLi
+        $mysqli = new mysqli($dbConfig['DBHOST'], $dbConfig['DBUSER'], $dbConfig['DBPASS'], $dbConfig['DBNAME']);
+
+        // Check for connection errors
+        if ($mysqli->connect_error) {
+            die("Connection failed: " . $mysqli->connect_error);
+        }
+
+        // Query to fetch book data
+        $sql = "SELECT bookid, title, author, publisher, active, create_dt, last_updated FROM book";
+        if (!empty($filterValue) && !empty($filterColumn)) {
+            $sql .= " WHERE $filterColumn LIKE '%" . $mysqli->real_escape_string($filterValue) . "%'";
+        }
+
+        $result = $mysqli->query($sql);
+
+        // Display count of books found
+        if ($result && $result->num_rows > 0) {
+            echo "<p>" . $result->num_rows . " books found.</p>";
+        } else {
+            echo "<p>No books found.</p>";
+        }
+        ?>
+
+        <!-- Filter Form -->
         <div class="filter-section">
-            <label for="filter">Filter:</label>
-            <input type="text" id="filter" name="filter">
-            <label for="column">Column:</label>
-            <select id="column" name="column">
-                <option value="">--Select Column--</option>
-                <option value="title">Title</option>
-                <option value="author">Author</option>
-                <option value="publisher">Publisher</option>
-                <option value="active">Active</option>
-            </select>
-            <button type="button">Filter</button>
+            <form method="GET" action="">
+                <label for="filter">Filter:</label>
+                <input type="text" id="filter" name="filter" value="<?php echo htmlspecialchars($filterValue); ?>">
+                <label for="column">Column:</label>
+                <select id="column" name="column">
+                    <option value="">--Select Column--</option>
+                    <option value="title" <?php if ($filterColumn == 'title')
+                        echo 'selected'; ?>>Title</option>
+                    <option value="author" <?php if ($filterColumn == 'author')
+                        echo 'selected'; ?>>Author</option>
+                    <option value="publisher" <?php if ($filterColumn == 'publisher')
+                        echo 'selected'; ?>>Publisher
+                    </option>
+                    <option value="active" <?php if ($filterColumn == 'active')
+                        echo 'selected'; ?>>Active</option>
+                </select>
+                <button type="submit">Filter</button>
+            </form>
         </div>
 
         <table>
             <thead>
                 <tr>
-                    <th>bookid</th>
-                    <th>title</th>
-                    <th>author</th>
-                    <th>publisher</th>
-                    <th>active</th>
-                    <th>create_dt</th>
-                    <th>last_updated</th>
-                    <th>status</th>
+                    <th>Bookid</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Publisher</th>
+                    <th>Is Active?</th>
+                    <th>Date Added</th>
+                    <th>Date of Last Update</th>
+                    <th>status</th> <!-- what is difference of status and is active? Can we delete this column? -->
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>PHP and MySQL Web Development</td>
-                    <td>Welling and Thompson</td>
-                    <td>Addison Wesley</td>
-                    <td>1</td>
-                    <td>2024-11-03 22:37:53</td>
-                    <td>2024-11-03 22:37:53</td>
-                    <td><a href="#" class="status-link">Active Status</a></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Programming Rust</td>
-                    <td>Blandy, et. al.</td>
-                    <td>O'Reilly</td>
-                    <td>1</td>
-                    <td>2024-11-03 22:37:53</td>
-                    <td>2024-11-03 22:37:53</td>
-                    <td><a href="#" class="status-link">Active Status</a></td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Database System Concepts</td>
-                    <td>Silberschatz, et. al.</td>
-                    <td>McGraw Hill</td>
-                    <td>1</td>
-                    <td>2024-11-03 22:37:53</td>
-                    <td>2024-11-03 22:37:53</td>
-                    <td><a href="#" class="status-link">Active Status</a></td>
-                </tr>
+                <?php
+                // Fetch and display data from the query
+                if ($result && $result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row['bookid'] . "</td>";
+                        echo "<td>" . $row['title'] . "</td>";
+                        echo "<td>" . $row['author'] . "</td>";
+                        echo "<td>" . $row['publisher'] . "</td>";
+                        echo "<td>" . ($row['active'] == 1 ? 'Active' : 'Inactive') . "</td>";
+                        echo "<td>" . $row['create_dt'] . "</td>";
+                        echo "<td>" . $row['last_updated'] . "</td>";
+                        echo "<td><a href='#' class='status-link'>Active Status</a></td>";
+                        echo "</tr>";
+                    }
+                }
+                $mysqli->close();
+                ?>
             </tbody>
         </table>
 
+		<p><a href="InsertBook.php" class="back-link">Add a book</a> to the library Database</p>
         <p><a href="../index.php" class="back-link">Back to home page.</a></p>
     </div>
 </body>

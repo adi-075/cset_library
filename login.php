@@ -1,111 +1,90 @@
 <?php
-
 session_start();
 
-	if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['userid'])&& isset($_POST['password']) && !isset($_POST['logout']))
-	{
-		// if the user has just tried to log in
-		$userid = $_POST['userid'];
-		$password = $_POST['password'];
-		$isAuthenticated = false;
+// Load database configuration from myproperties.ini
+$config = parse_ini_file("myproperties.ini", true)['DB'] ?? null;
+if (!$config || !isset($config['DBHOST'], $config['DBUSER'], $config['DBPASS'], $config['DBNAME'])) {
+    die("Error: Unable to load database configuration.");
+}
 
-		// Password hash
-		//$hash = password_hash($password, PASSWORD_DEFAULT);
-		
-		$inifile = parse_ini_file("myproperties.ini");   
-		$connection = new mysqli($inifile["DBHOST"], $inifile["DBUSER"], $inifile["DBPASS"], $inifile["DBNAME"]) 
-				  or die("Connection failed:" . mysqli_connect_error()) ;
-	
-		$stmt = $connection->prepare("SELECT `passwordhash` FROM `user_authentication` WHERE `username` = ?");
-				
-			
-		$stmt->bind_param("s", $userid);
-		
-		$stmt->execute();
-		
-		$result = $stmt->get_result(); // get the mysqli result
-		$user = $result->fetch_assoc(); // fetch data  
-		if (password_verify($password, $user['passwordhash'])) 
-		{
-			$isAuthenticated = true;
-		}
-		
-		if ($isAuthenticated) {
- 		$_SESSION['valid_user'] = $userid;
-		
-    	}
-    	else {
-      		unset($_SESSION['valid_user']);
-    	}
+// Establish database connection
+$mysqli = new mysqli($config['DBHOST'], $config['DBUSER'], $config['DBPASS'], $config['DBNAME']);
+if ($mysqli->connect_error) {
+    die("Connection failed: " . $mysqli->connect_error);
+}
 
+// Handle login form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Retrieve user input from login form
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-		$connection->close();
-	}else
-	{
-		unset($_SESSION['valid_user']);
-	}
+    // Prepare a statement to prevent SQL injection
+    $stmt = $mysqli->prepare("SELECT passwordhash FROM user_authentication WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->store_result();
 
+    // Check if user exists in the database
+    if ($stmt->num_rows === 1) {
+        $stmt->bind_result($hashedPassword);
+        $stmt->fetch();
+
+        // Verify the password
+        if (password_verify($password, $hashedPassword)) {
+            // Set session variables to mark user as logged in
+            $_SESSION['loggedin'] = true;
+            $_SESSION['username'] = $username;
+
+            // Redirect to the main page
+            header("Location: index.php");
+            exit;
+        } else {
+            // Invalid password
+            $_SESSION['error'] = "Invalid username or password.";
+        }
+    } else {
+        // Username does not exist
+        $_SESSION['error'] = "Invalid username or password.";
+    }
+
+    // Close the statement
+    $stmt->close();
+}
+
+// Close the database connection
+$mysqli->close();
 ?>
 
-
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Login Page</title>
-    <style type="text/css">
-      label {
-         width: 125px;
-         float: left;
-         text-align: left;
-         font-weight: bold;
-      }
-      input {
-         border: 1px solid #000;
-         padding: 3px;
-      }
-      button {
-         margin-top: 12px;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Home Page</h1>
+<html lang="en">
 
-		<?php
-		  if (isset($_SESSION['valid_user']) && $_SESSION['valid_user'] != "") {
-			  var_dump($_SESSION);
-			 echo '<p>You are logged in as: '.$_SESSION['valid_user'].' <br />';
-			 echo '<a href="logout.php">Log out</a></p>';
-			 header('Location: index.php');
-		  }
-		  else if (isset($userid)) {
-			  // if they've tried and failed to log in
-			  echo '<p>Could not log you in.  Bad username or password?</p>';
-		  }
-		  else {
-			  // they have not tried to log in yet or have logged out
-			  echo '<p>You are not logged in.</p>';
-		  }    
-		?>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
 
-	<?php
-		if(isset($_SESSION['valid_user']) == null)
-		{
-	?>
+<body>
+    <h2>Login</h2>
     <form action="login.php" method="post">
-      <p>
-        <label for="userid">UserID:</label>
-        <input type="text" name="userid" id="userid" size="30"/>
-      </p>
-      <p>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
         <label for="password">Password:</label>
-        <input type="password" name="password" id="password" size="30"/>
-      </p>   
-      <button type="submit" name="login">Login</button>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <input type="submit" value="Login">
     </form>
 
-	<?php
-		}
-	?>
-  </body>
+    <?php
+    // Display error message if there is one
+    if (isset($_SESSION['error'])) {
+        echo "<p style='color: red;'>" . $_SESSION['error'] . "</p>";
+        unset($_SESSION['error']); // Clear the error after displaying it
+    }
+    ?>
+    <p>Don't have an account? <a href="create_user.php">Create one here</a>.</p>
+</body>
+
 </html>
