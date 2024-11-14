@@ -129,14 +129,14 @@
         <table>
             <thead>
                 <tr>
-                    <th>bookid</th>
-                    <th>title</th>
-                    <th>author</th>
-                    <th>publisher</th>
-                    <th>active</th>
-                    <th>create_dt</th>
-                    <th>last_updated</th>
-                    <th>status</th>
+                    <th>Bookid</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Publisher</th>
+                    <th>Is Active?</th>
+                    <th>Date Added</th>
+                    <th>Date of Last Update</th>
+                    <th>status</th> <!-- what is difference of status and is active? Can we delete this column? -->
                 </tr>
             </thead>
             <tbody>
@@ -161,6 +161,7 @@
             </tbody>
         </table>
 
+		<p><a href="InsertBook.php" class="back-link">Add a book</a> to the library Database</p>
         <p><a href="../index.php" class="back-link">Back to home page.</a></p>
     </div>
 </body>
