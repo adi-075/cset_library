@@ -134,12 +134,15 @@
                     <th>Title</th>
                     <th>Author</th>
                     <th>Publisher</th>
-                    <th>Is Active?</th>
                     <th>Date Added</th>
                     <th>Date of Last Update</th>
-                    <th>Delete Book</th> <!-- what is difference of status and is active? Can we delete this column? -->
+					<th>Edit Book Info</th>
+                    <th>Delete Book</th>
                 </tr>
-			<?php foreach($books as $row): ?>
+			<?php 
+			foreach($books as $row): 
+				if($row['active'] == 1)
+				{?>
 				<tr>
 					<td><?php echo htmlspecialchars($row['bookid']); ?></td>
 					<td><?php echo htmlspecialchars($row['title']); ?></td>
@@ -151,6 +154,7 @@
 
 				    <td><a href="deleteBook.php?bookid=<?= $row['bookid']; ?>">Delete</a></td>  	  
 				</tr>
+				<?php } ?>
             </thead>
 			<?php endforeach; ?>
         </table>

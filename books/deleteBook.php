@@ -11,7 +11,7 @@
 			die("Failed to connect: " . mysqli_connect_error());	
 		}
 		
-		$stmt = $conn->prepare("DELETE FROM `book` WHERE `bookid` = ?");
+		$stmt = $conn->prepare("UPDATE `book` SET active = 0 WHERE `bookid` = ?");
 		$returnval = $stmt->bind_param("i", $id);
 		//mysqli_stmt_bind_param($stmt, "i", $id)
 		
