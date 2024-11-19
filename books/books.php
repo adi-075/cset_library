@@ -95,6 +95,7 @@
         }
 
         $result = $mysqli->query($sql);
+		$books = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         // Display count of books found
         if ($result && $result->num_rows > 0) {
@@ -136,29 +137,22 @@
                     <th>Is Active?</th>
                     <th>Date Added</th>
                     <th>Date of Last Update</th>
-                    <th>status</th> <!-- what is difference of status and is active? Can we delete this column? -->
+                    <th>Delete Book</th> <!-- what is difference of status and is active? Can we delete this column? -->
                 </tr>
+			<?php foreach($books as $row): ?>
+				<tr>
+					<td><?php echo htmlspecialchars($row['bookid']); ?></td>
+					<td><?php echo htmlspecialchars($row['title']); ?></td>
+					<td><?php echo htmlspecialchars($row['author']); ?></td>
+					<td><?php echo htmlspecialchars($row['publisher']); ?></td>
+					<td><?php echo htmlspecialchars($row['create_dt']); ?></td>
+					<td><?php echo htmlspecialchars($row['last_updated']); ?></td>
+				    <td><a href="edit.php?id=<?= $row['bookid']; ?>">Edit </a></td>
+
+				    <td><a href="deleteBook.php?bookid=<?= $row['bookid']; ?>">Delete</a></td>  	  
+				</tr>
             </thead>
-            <tbody>
-                <?php
-                // Fetch and display data from the query
-                if ($result && $result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $row['bookid'] . "</td>";
-                        echo "<td>" . $row['title'] . "</td>";
-                        echo "<td>" . $row['author'] . "</td>";
-                        echo "<td>" . $row['publisher'] . "</td>";
-                        echo "<td>" . ($row['active'] == 1 ? 'Active' : 'Inactive') . "</td>";
-                        echo "<td>" . $row['create_dt'] . "</td>";
-                        echo "<td>" . $row['last_updated'] . "</td>";
-                        echo "<td><a href='#' class='status-link'>Active Status</a></td>";
-                        echo "</tr>";
-                    }
-                }
-                $mysqli->close();
-                ?>
-            </tbody>
+			<?php endforeach; ?>
         </table>
 
 		<p><a href="InsertBook.php" class="back-link">Add a book</a> to the library Database</p>
