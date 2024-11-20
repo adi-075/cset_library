@@ -150,7 +150,7 @@
 					<td><?php echo htmlspecialchars($row['publisher']); ?></td>
 					<td><?php echo htmlspecialchars($row['create_dt']); ?></td>
 					<td><?php echo htmlspecialchars($row['last_updated']); ?></td>
-				    <td><a href="edit.php?id=<?= $row['bookid']; ?>">Edit </a></td>
+				    <td><a href="editBook.php?bookid=<?= $row['bookid']; ?>">Edit </a></td>
 
 				    <td><a href="deleteBook.php?bookid=<?= $row['bookid']; ?>">Delete</a></td>  	  
 				</tr>
