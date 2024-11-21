@@ -84,7 +84,7 @@ $mysqli->close();
         unset($_SESSION['error']); // Clear the error after displaying it
     }
     ?>
-    <!-- <p>Don't have an account? <a href="create_user.php">Create one here</a>.</p> -->
+    <!-- <p>Are you an Administrator?<a href="create_user.php">Create an Account here.</a>.</p> -->
 </body>
 
 </html>
