@@ -28,6 +28,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         <p><a href="">Checkout</a> a book.</p>
         <p><a href="">Return</a> a book.</p>
         <p>Report a book <a href="">history</a>.</p>
+        <p>Create <a href="create_user.php">Admin Account</a></p>
         <p>Application <a href="logout.php">logout</a>.</p>
     </div>
 </body>
