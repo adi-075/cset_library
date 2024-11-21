@@ -16,10 +16,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSET Library Homepage</title>
     <link rel="stylesheet" href="styles/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap"
-        rel="stylesheet">
 </head>
 
 <body style="font-family: Arial, sans-serif;">
@@ -53,7 +49,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         <br>
         <div class="book-mgmt">
             <h3>
-               * Book Management
+                * Book Management
             </h3>
             <ul>
                 <li>
@@ -72,6 +68,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                     </p>
                 </li>
             </ul>
+            <p>
+                <a href="logout.php">Logout</a>
+            </p>
         </div>
     </div>
 </body>
