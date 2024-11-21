@@ -67,7 +67,7 @@ $mysqli->close();
 
 <body>
    <form action="login.php" method="post">
-        <h2>Login</h2>
+        <h2>LIBRARY LOGIN</h2>
         <label for="username"><b>USERNAME</b></label><br>
         <input type="text" id="username" name="username" required><br><br>
 
