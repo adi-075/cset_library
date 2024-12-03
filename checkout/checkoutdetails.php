@@ -97,6 +97,7 @@
  
 <body bgcolor="FFFFFF">
     <h1> Checkout a Book </h1>
+	<link rel="stylesheet" href="../styles/style.css">
     <div>
         <h2>Checkout Book</h2>
     </div>

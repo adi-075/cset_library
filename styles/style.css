@@ -1,0 +1,76 @@
+@import url("https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap");
+
+body {
+  background-color: #ebe9e1;
+  color: #e43d12;
+}
+
+.app-home {
+  color: #111;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+  margin-left: 15px;
+  font-size: 20px;
+}
+
+a:hover {
+  color: #d6536d;
+}
+
+a:visited {
+  color: #6604fa;
+}
+
+h3 {
+  color: #f6385e;
+  font-family: "Alegreya", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+ul {
+  list-style-type: none; /* Remove default bullet points */
+  padding: 0; /* Remove padding */
+}
+
+ul li {
+  position: relative; /* Allows the use of ::before for the dash */
+  padding-left: 35px; /* Creates space for the dash */
+}
+
+ul li::before {
+  content: "-"; /* Add the dash */
+  position: absolute; /* Position it to the left */
+  left: 0; /* Align it to the left of the list item */
+  color: #333; /* Customize the dash color if needed */
+  font-weight: bold; /* Make the dash bold for visibility */
+}
+
+.filter-section {
+    margin-bottom: 20px;
+}
+
+    .filter-section label,
+    .filter-section input,
+    .filter-section select {
+        margin-right: 5px;
+    }
+
+table {
+    width: 100%;
+    border-collapse: separate; /* Use separate for distinct borders */
+    margin-bottom: 20px;
+    border: 2px solid black; /* Table border */
+    border-spacing: 0; /* Ensures no space between cells */
+}
+
+th,
+td {
+    padding: 8px 12px;
+    text-align: left;
+    border: 1px solid black; /* Black border on each cell */
+}
+
+th {
+    background-color: #f2f2f2;
+}
