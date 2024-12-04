@@ -73,7 +73,6 @@ if (!$result) {
     die("Error fetching students: " . $mysqli->error);
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -82,95 +81,105 @@ if (!$result) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Management</title>
     <style>
+        @import url("https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&display=swap");
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9f9f9;
-            color: #333;
+            background-color: #ebe9e1;
+            color: #e43d12;
+            font-family: "Alegreya", serif;
+            margin: 0;
+            padding: 0;
         }
 
-        h1 {
-            text-align: center;
-            color: #4CAF50;
-        }
-
+        h1,
         h2 {
-            color: #4CAF50;
-            margin-top: 40px;
+            color: #f6385e;
+            font-weight: 700;
+            font-style: normal;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         form {
-            background: #ffffff;
-            padding: 20px;
-            border: 1px solid #ddd;
+            background-color: #fff;
+            border: 2px solid #e43d12;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
+            padding: 20px;
             margin: 20px auto;
+            width: 80%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         form label {
-            font-weight: bold;
             display: block;
+            font-weight: bold;
             margin-bottom: 5px;
+            color: #111;
         }
 
-        form input, form button {
-            width: 100%;
-            padding: 10px;
+        form input,
+        form button {
+            display: block;
+            width: calc(100% - 20px);
             margin-bottom: 15px;
-            border: 1px solid #ddd;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
             border-radius: 4px;
         }
 
         form button {
-            background-color: #4CAF50;
-            color: white;
-            font-weight: bold;
+            background-color: #e43d12;
+            color: #fff;
             border: none;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
         form button:hover {
-            background-color: #45a049;
+            background-color: #d6536d;
         }
 
         table {
-            width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
-            background: #ffffff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        table th, table td {
+        table th,
+        table td {
             border: 1px solid #ddd;
             padding: 10px;
             text-align: left;
         }
 
         table th {
-            background-color: #4CAF50;
+            background-color: #f6385e;
             color: white;
+            font-weight: bold;
         }
 
         table tr:nth-child(even) {
-            background-color: #f2f2f2;
+            background-color: #f9f9f9;
         }
 
         table tr:hover {
             background-color: #f1f1f1;
         }
 
-        .status-active {
-            color: green;
-            font-weight: bold;
+        a {
+            text-decoration: none;
+            color: #e43d12;
         }
 
-        .status-inactive {
-            color: red;
-            font-weight: bold;
+        a:hover {
+            color: #d6536d;
+        }
+
+        a:visited {
+            color: #6604fa;
         }
     </style>
 </head>
@@ -215,7 +224,7 @@ if (!$result) {
     </form>
 
     <h2>Student List</h2>
-    <table>
+    <table border="1">
         <tr>
             <th>Rocket ID</th>
             <th>Name</th>
@@ -223,18 +232,22 @@ if (!$result) {
             <th>Address</th>
             <th>Status</th>
         </tr>
-        <?php while ($row = $result->fetch_assoc()): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($row['rocketid']); ?></td>
-                <td><?php echo htmlspecialchars($row['name']); ?></td>
-                <td><?php echo htmlspecialchars($row['phone']); ?></td>
-                <td><?php echo htmlspecialchars($row['address']); ?></td>
-                <td class="<?php echo $row['active'] ? 'status-active' : 'status-inactive'; ?>">
-                    <?php echo $row['active'] ? "Active" : "Inactive"; ?>
-                </td>
-            </tr>
-        <?php endwhile; ?>
-    </table>
+    <?php
+    // Ensure $result is defined
+    if (isset($result) && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>
+                <td>" . htmlspecialchars($row['rocketid']) . "</td>
+                <td>" . htmlspecialchars($row['name']) . "</td>
+                <td>" . htmlspecialchars($row['phone']) . "</td>
+                <td>" . htmlspecialchars($row['address']) . "</td>
+                <td>" . ($row['active'] ? "Active" : "Inactive") . "</td>
+              </tr>";
+        }
+    } else {
+        echo "<tr><td colspan='5'>No students found.</td></tr>";
+    } ?>
+</table>
 </body>
 
 </html>
