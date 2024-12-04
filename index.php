@@ -27,7 +27,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         <p>Maintain <a href="">Students</a>.</p>
         <p>Maintain <a href="books/books.php">books</a>.</p>
         <p><a href="checkout/checkout.php">Checkout</a> a book.</p>
-        <p><a href="">Return</a> a book.</p>
+        <p><a href="return/return.php">Return</a> a book.</p>
         <p>Report a book <a href="">history</a>.</p>
         <p>Application <a href="logout.php">logout</a>.</p>
     </div>
