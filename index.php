@@ -31,7 +31,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             <ul>
                 <li>
                     <p>
-                        <a href="">Students</a>
+                        <a href="students.php">Students</a>
                     </p>
                 </li>
                 <li>
