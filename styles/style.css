@@ -45,3 +45,32 @@ ul li::before {
   color: #333; /* Customize the dash color if needed */
   font-weight: bold; /* Make the dash bold for visibility */
 }
+
+.filter-section {
+    margin-bottom: 20px;
+}
+
+    .filter-section label,
+    .filter-section input,
+    .filter-section select {
+        margin-right: 5px;
+    }
+
+table {
+    width: 100%;
+    border-collapse: separate; /* Use separate for distinct borders */
+    margin-bottom: 20px;
+    border: 2px solid black; /* Table border */
+    border-spacing: 0; /* Ensures no space between cells */
+}
+
+th,
+td {
+    padding: 8px 12px;
+    text-align: left;
+    border: 1px solid black; /* Black border on each cell */
+}
+
+th {
+    background-color: #f2f2f2;
+}

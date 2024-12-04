@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Maintenance</title>
+    <title>Return Book</title>
     <link rel="stylesheet" href="../styles/style.css">
 </head>
 
 <body>
     <div class="container">
-        <h1>Book Maintenance</h1>
+        <h1>Return Book</h1>
 
         <?php
         // Load database configuration from myproperties.ini
@@ -35,19 +35,22 @@
         }
 
         // Query to fetch book data
-        $sql = "SELECT bookid, title, author, publisher, active, create_dt, last_updated FROM book";
-        if (!empty($filterValue) && !empty($filterColumn)) {
+        $sql = "SELECT title, author, publisher, book.create_dt, checkout.promise_date, checkout.return_date, book.bookid, checkout.rocketid, checkout.checkoutid
+				FROM checkout JOIN book
+				ON book.bookid = checkout.bookid
+				WHERE book.active = 1 AND checkout.promise_date IS NOT NULL AND checkout.return_date IS NULL";
+        /*if (!empty($filterValue) && !empty($filterColumn)) {
             $sql .= " WHERE $filterColumn LIKE '%" . $mysqli->real_escape_string($filterValue) . "%'";
-        }
+        }*/
 
         $result = $mysqli->query($sql);
-        $books = mysqli_fetch_all($result, MYSQLI_ASSOC);
+		$checkedout = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         // Display count of books found
         if ($result && $result->num_rows > 0) {
             echo "<p>" . $result->num_rows . " books found.</p>";
         } else {
-            echo "<p>No books found.</p>";
+            echo "<p>No books are checked out.</p>";
         }
         ?>
 
@@ -59,49 +62,49 @@
                 <label for="column">Column:</label>
                 <select id="column" name="column">
                     <option value="">--Select Column--</option>
-                    <option value="title" <?php if ($filterColumn == 'title') echo 'selected'; ?>>Title</option>
-                    <option value="author" <?php if ($filterColumn == 'author') echo 'selected'; ?>>Author</option>
-                    <option value="publisher" <?php if ($filterColumn == 'publisher') echo 'selected'; ?>>Publisher</option>
-                    <option value="active" <?php if ($filterColumn == 'active') echo 'selected'; ?>>Active</option>
+                    <option value="title" <?php if ($filterColumn == 'title')
+                        echo 'selected'; ?>>Title</option>
+                    <option value="author" <?php if ($filterColumn == 'author')
+                        echo 'selected'; ?>>Author</option>
+                    <option value="publisher" <?php if ($filterColumn == 'publisher')
+                        echo 'selected'; ?>>Publisher
+                    </option>
+                    <option value="active" <?php if ($filterColumn == 'active')
+                        echo 'selected'; ?>>Active</option>
                 </select>
                 <button type="submit">Filter</button>
             </form>
         </div>
 
-        <!-- Book Table -->
         <table>
             <thead>
                 <tr>
-                    <th>Bookid</th>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Publisher</th>
-                    <th>Date Added</th>
-                    <th>Date of Last Update</th>
-                    <th>Edit Book Info</th>
-                    <th>Delete Book</th>
+                   <!-- <th>Checkout ID</th>-->
+                    <th>Book ID</th>
+                    <th>Student ID</th>
+					<th>Title</th>
+					<th>Publisher</th>
+                    <th>Promised Return Date</th>
+					<th>Return</th>
                 </tr>
+			<?php 
+			foreach($checkedout as $row): 
+				if($row['promise_date'] != NULL && $row['return_date'] == NULL)
+				{?>
+				<tr>
+					<!-- <td><?php echo htmlspecialchars($row['checkoutid']); ?></td>-->
+					<td><?php echo htmlspecialchars($row['bookid']); ?></td>
+					<td><?php echo htmlspecialchars($row['rocketid']); ?></td>
+					<td><?php echo htmlspecialchars($row['title']); ?></td>
+					<td><?php echo htmlspecialchars($row['publisher']); ?></td>
+					<td><?php echo htmlspecialchars($row['promise_date']); ?></td>
+				    <td><a href="returnUpdate.php?bookid=<?= $row['bookid'] ?>&checkoutid=<?= $row['checkoutid'] ?>">Return</a></td>
+				</tr>
+				<?php } ?>
             </thead>
-            <tbody>
-                <?php
-                foreach ($books as $row):
-                    if ($row['active'] == 1): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($row['bookid']); ?></td>
-                            <td><?php echo htmlspecialchars($row['title']); ?></td>
-                            <td><?php echo htmlspecialchars($row['author']); ?></td>
-                            <td><?php echo htmlspecialchars($row['publisher']); ?></td>
-                            <td><?php echo htmlspecialchars($row['create_dt']); ?></td>
-                            <td><?php echo htmlspecialchars($row['last_updated']); ?></td>
-                            <td><a href="editBook.php?bookid=<?= $row['bookid']; ?>">Edit</a></td>
-                            <td><a href="deleteBook.php?bookid=<?= $row['bookid']; ?>">Delete</a></td>
-                        </tr>
-                    <?php endif;
-                endforeach; ?>
-            </tbody>
+			<?php endforeach; ?>
         </table>
 
-        <p><a href="InsertBook.php" class="back-link">Add a book</a> to the library Database</p>
         <p><a href="../index.php" class="back-link">Back to home page.</a></p>
     </div>
 </body>

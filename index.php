@@ -20,9 +20,10 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 <body style="font-family: Arial, sans-serif;">
     <div class="hero" style="text-align: center;">
-        <h1>Library Homepage</h1>
+      <h1>Welcome to the Library App</h1>
+		  <link rel="stylesheet" href="styles/style.css">
     </div>
-
+  
     <div class="app-home">
         <div class="maintain">
             <h3>
