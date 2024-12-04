@@ -112,11 +112,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Book Info</title>
+	<link rel="stylesheet" href="../styles/style.css">
 </head>
 
 	  
  
-<body bgcolor="FFFFFF">
+<body>
     <h1> Book Maintenance </h1>
     <div>
         <h2>Make Edit to Book</h2>

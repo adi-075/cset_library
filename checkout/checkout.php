@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Maintenance</title>
+    <title>Checkout Book</title>
     <link rel="stylesheet" href="../styles/style.css">
 </head>
 
 <body>
     <div class="container">
-        <h1>Book Maintenance</h1>
+        <h1>Checkout Book</h1>
 
         <?php
         // Load database configuration from myproperties.ini
@@ -41,7 +41,7 @@
         }
 
         $result = $mysqli->query($sql);
-        $books = mysqli_fetch_all($result, MYSQLI_ASSOC);
+		$books = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         // Display count of books found
         if ($result && $result->num_rows > 0) {
@@ -59,16 +59,20 @@
                 <label for="column">Column:</label>
                 <select id="column" name="column">
                     <option value="">--Select Column--</option>
-                    <option value="title" <?php if ($filterColumn == 'title') echo 'selected'; ?>>Title</option>
-                    <option value="author" <?php if ($filterColumn == 'author') echo 'selected'; ?>>Author</option>
-                    <option value="publisher" <?php if ($filterColumn == 'publisher') echo 'selected'; ?>>Publisher</option>
-                    <option value="active" <?php if ($filterColumn == 'active') echo 'selected'; ?>>Active</option>
+                    <option value="title" <?php if ($filterColumn == 'title')
+                        echo 'selected'; ?>>Title</option>
+                    <option value="author" <?php if ($filterColumn == 'author')
+                        echo 'selected'; ?>>Author</option>
+                    <option value="publisher" <?php if ($filterColumn == 'publisher')
+                        echo 'selected'; ?>>Publisher
+                    </option>
+                    <option value="active" <?php if ($filterColumn == 'active')
+                        echo 'selected'; ?>>Active</option>
                 </select>
                 <button type="submit">Filter</button>
             </form>
         </div>
 
-        <!-- Book Table -->
         <table>
             <thead>
                 <tr>
@@ -76,32 +80,24 @@
                     <th>Title</th>
                     <th>Author</th>
                     <th>Publisher</th>
-                    <th>Date Added</th>
-                    <th>Date of Last Update</th>
-                    <th>Edit Book Info</th>
-                    <th>Delete Book</th>
+					<th>Checkout</th>
                 </tr>
+			<?php 
+			foreach($books as $row): 
+				if($row['active'] == 1)
+				{?>
+				<tr>
+					<td><?php echo htmlspecialchars($row['bookid']); ?></td>
+					<td><?php echo htmlspecialchars($row['title']); ?></td>
+					<td><?php echo htmlspecialchars($row['author']); ?></td>
+					<td><?php echo htmlspecialchars($row['publisher']); ?></td>
+				    <td><a href="checkoutdetails.php?bookid=<?= $row['bookid']; ?>">Checkout </a></td>
+				</tr>
+				<?php } ?>
             </thead>
-            <tbody>
-                <?php
-                foreach ($books as $row):
-                    if ($row['active'] == 1): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($row['bookid']); ?></td>
-                            <td><?php echo htmlspecialchars($row['title']); ?></td>
-                            <td><?php echo htmlspecialchars($row['author']); ?></td>
-                            <td><?php echo htmlspecialchars($row['publisher']); ?></td>
-                            <td><?php echo htmlspecialchars($row['create_dt']); ?></td>
-                            <td><?php echo htmlspecialchars($row['last_updated']); ?></td>
-                            <td><a href="editBook.php?bookid=<?= $row['bookid']; ?>">Edit</a></td>
-                            <td><a href="deleteBook.php?bookid=<?= $row['bookid']; ?>">Delete</a></td>
-                        </tr>
-                    <?php endif;
-                endforeach; ?>
-            </tbody>
+			<?php endforeach; ?>
         </table>
 
-        <p><a href="InsertBook.php" class="back-link">Add a book</a> to the library Database</p>
         <p><a href="../index.php" class="back-link">Back to home page.</a></p>
     </div>
 </body>
