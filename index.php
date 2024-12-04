@@ -14,21 +14,64 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSET Library</title>
+    <title>CSET Library Homepage</title>
+    <link rel="stylesheet" href="styles/style.css">
 </head>
 
 <body style="font-family: Arial, sans-serif;">
     <div class="hero" style="text-align: center;">
-        <h1>Welcome to the Library App</h1>
+        <h1>Library Homepage</h1>
     </div>
-    <h2>Library App Home</h2>
+
     <div class="app-home">
-        <p>Maintain <a href="">Students</a>.</p>
-        <p>Maintain <a href="books/books.php">books</a>.</p>
-        <p><a href="checkout/checkout.php">Checkout</a> a book.</p>
-        <p><a href="">Return</a> a book.</p>
-        <p>Report a book <a href="">history</a>.</p>
-        <p>Application <a href="logout.php">logout</a>.</p>
+        <div class="maintain">
+            <h3>
+                * Maintain
+            </h3>
+            <ul>
+                <li>
+                    <p>
+                        <a href="students.php">Students</a>
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        <a href="books/books.php">Books</a>
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        <a href="create_user.php">Create Admin Account</a>
+                    </p>
+                </li>
+            </ul>
+        </div>
+        <br>
+        <div class="book-mgmt">
+            <h3>
+                * Book Management
+            </h3>
+            <ul>
+                <li>
+                    <p>
+                        <a href="checkout/checkout.php">Checkout Books</a>
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        <a href="books/return.php">Return Book</a>
+                    </p>
+                </li>
+                <li>
+                    <p>
+                        <a href="books/book-history.php">View Book History</a>
+                    </p>
+                </li>
+            </ul>
+            <p>
+                <a href="logout.php">Logout</a>
+            </p>
+        </div>
     </div>
 </body>
 
