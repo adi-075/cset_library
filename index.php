@@ -54,7 +54,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             <ul>
                 <li>
                     <p>
-                        <a href="books/checkout.php">Checkout Books</a>
+                        <a href="checkout/checkout.php">Checkout Books</a>
                     </p>
                 </li>
                 <li>
