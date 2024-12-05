@@ -60,12 +60,12 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                 </li>
                 <li>
                     <p>
-                        <a href="books/return.php">Return Book</a>
+                        <a href="return/return.php">Return Book</a>
                     </p>
                 </li>
                 <li>
                     <p>
-                        <a href="books/book-history.php">View Book History</a>
+                        <a href="history/history.php">View Book History</a>
                     </p>
                 </li>
             </ul>
